@@ -50,8 +50,6 @@ export const GPUAccordionItem = ({ gpu }: GPUAccordionItemProps) => {
         <div className="grid grid-cols-3 gap-4 items-center">
           <div className="font-bold">GPU Name</div>
           <div className="col-span-2 justify-self-end">{gpu.gpu_name}</div>
-          <div className="font-bold">IP</div>
-          <div className="col-span-2 justify-self-end">slurm-1</div>
           <div className="font-bold">Memory Usage</div>
           <div className="col-span-2 justify-self-end">
             {gpu.memory_used}M<span className="font-bold">/</span>
