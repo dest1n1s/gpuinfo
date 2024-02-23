@@ -79,7 +79,7 @@ export const GPUAccordionItem = ({ gpu }: GPUAccordionItemProps) => {
                 on GPU {gpu.index}
               </Button>
             </AlertDialogTrigger>
-            <AlertDialogContent className="max-w-[720px]">
+            <AlertDialogContent className="max-w-[720px] grid-cols-1">
               <AlertDialogHeader>
                 <AlertDialogTitle>Processes running on GPU {gpu.index} of node-1</AlertDialogTitle>
                 <AlertDialogDescription>
