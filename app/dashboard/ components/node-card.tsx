@@ -57,13 +57,15 @@ export const GPUAccordionItem = ({ gpu }: GPUAccordionItemProps) => {
           </div>
           <div className="font-bold">CPU Usage</div>
           <div className="col-span-2 justify-self-end">{gpu.utilization}%</div>
+          <div className="font-bold">Fan Speed</div>
+          <div className="col-span-2 justify-self-end">{gpu.fan_speed} RPM</div>
           <div className="font-bold">Temperature</div>
           <div className="col-span-2 justify-self-end">{gpu.temperature}°C</div>
         </div>
-        <div className="self-start">
+        {/* <div className="self-start">
           Data updated at{" "}
           <span className="font-bold">{format(gpu.time, "yyyy-MM-dd HH:mm:ss")}</span>.
-        </div>
+        </div> */}
         {gpu.process.length === 0 && (
           <Button size="sm" disabled>
             No process running
@@ -114,12 +116,22 @@ export type NodeCardProps = {
   node: NodeInfo;
 };
 export const NodeCard = ({ node }: NodeCardProps) => {
+  const latestUpdateTime = node.gpus.reduce((acc, gpu) => {
+    return gpu.time > acc ? gpu.time : acc;
+  }, new Date(0));
+
   return (
     <Card className="w-full lg:w-[400px]">
       <CardHeader>
         <CardTitle>{node.ip}</CardTitle>
       </CardHeader>
       <CardContent>
+        {node.gpus.length > 0 && (
+          <div className="self-start">
+            Data updated at{" "}
+            <span className="font-bold">{format(latestUpdateTime, "yyyy-MM-dd HH:mm:ss")}</span>.
+          </div>
+        )}
         <div className="flex flex-col w-full gap-4">
           {node.gpus.length > 0 && (
             <Accordion type="multiple" className="w-full">
