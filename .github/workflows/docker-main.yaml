@@ -2,10 +2,10 @@ name: Publish to Docker - Development
 
 on:
   push:
-    branches: [master]
+    branches: [main]
 
 env:
-  APP_NAME: dest1n1s-website
+  APP_NAME: gpuinfo
 
 jobs:
   docker:
