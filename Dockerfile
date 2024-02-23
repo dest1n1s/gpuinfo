@@ -20,7 +20,6 @@ FROM imbios/bun-node:latest as runner
 WORKDIR /app
 COPY --from=builder /app/package.json /app/bun.lockb /app/tsconfig.json ./
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/migrations ./migrations
 COPY --from=builder /app/.next ./.next
 RUN bun install --production
 
