@@ -17,6 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { Separator } from "@/components/ui/separator";
 import {
   Table,
   TableBody,
@@ -38,7 +39,9 @@ export const GPUAccordionItem = ({ gpu }: GPUAccordionItemProps) => {
         <div className="flex flex-col gap-1 grow">
           <div className="flex justify-between">
             <div>GPU {gpu.index}</div>
-            <div>
+            <div className="flex">
+              {gpu.utilization}%
+              <Separator orientation="vertical" className="mx-1" />
               {gpu.memory_used}M<span className="font-bold">/</span>
               {gpu.memory_total}M
             </div>
@@ -55,7 +58,7 @@ export const GPUAccordionItem = ({ gpu }: GPUAccordionItemProps) => {
             {gpu.memory_used}M<span className="font-bold">/</span>
             {gpu.memory_total}M
           </div>
-          <div className="font-bold">CPU Usage</div>
+          <div className="font-bold">GPU Usage</div>
           <div className="col-span-2 justify-self-end">{gpu.utilization}%</div>
           <div className="font-bold">Fan Speed</div>
           <div className="col-span-2 justify-self-end">{gpu.fan_speed} RPM</div>
@@ -81,7 +84,7 @@ export const GPUAccordionItem = ({ gpu }: GPUAccordionItemProps) => {
             </AlertDialogTrigger>
             <AlertDialogContent className="max-w-[720px] grid-cols-1">
               <AlertDialogHeader>
-                <AlertDialogTitle>Processes running on GPU {gpu.index} of node-1</AlertDialogTitle>
+                <AlertDialogTitle>Processes running on GPU {gpu.index}</AlertDialogTitle>
                 <AlertDialogDescription>
                   <Table>
                     <TableHeader>
