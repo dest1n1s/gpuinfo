@@ -15,7 +15,11 @@ export type GPUInfo = {
   time: Date;
 };
 
+export type GPUInfoWithUser = GPUInfo & {
+  user: string | null;
+};
+
 export type NodeInfo = {
   ip: string;
-  gpus: GPUInfo[];
+  gpus: GPUInfoWithUser[];
 };

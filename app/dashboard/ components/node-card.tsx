@@ -26,11 +26,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { GPUInfo, NodeInfo } from "@/types/gpu";
+import { GPUInfoWithUser, NodeInfo } from "@/types/gpu";
 import { format } from "date-fns";
 
 export type GPUAccordionItemProps = {
-  gpu: GPUInfo;
+  gpu: GPUInfoWithUser;
 };
 export const GPUAccordionItem = ({ gpu }: GPUAccordionItemProps) => {
   return (
@@ -38,7 +38,10 @@ export const GPUAccordionItem = ({ gpu }: GPUAccordionItemProps) => {
       <AccordionTrigger className="flex gap-2">
         <div className="flex flex-col gap-1 grow">
           <div className="flex justify-between">
-            <div>GPU {gpu.index}</div>
+            <div className="flex gap-2">
+              <div>GPU {gpu.index}</div>
+              {gpu.user && <div className="text-gray-600">({gpu.user})</div>}
+            </div>
             <div className="flex">
               {gpu.utilization}%
               <Separator orientation="vertical" className="mx-1" />
