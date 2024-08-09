@@ -1,12 +1,10 @@
 import { listAllNodes } from "@/lib/gpu";
-import { listAllUsers } from "@/lib/storage";
 import { NodeCard } from "./ components/node-card";
 
 export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
   const nodeInfos = await listAllNodes();
-  const users = await listAllUsers();
 
   return (
     <div className="flex min-h-screen flex-col w-full pb-20">
