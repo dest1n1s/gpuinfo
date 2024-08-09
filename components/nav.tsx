@@ -11,6 +11,7 @@ interface NavProps {
     label?: string;
     icon: IconType;
     variant: "default" | "ghost";
+    href: string;
   }[];
 }
 
@@ -20,7 +21,7 @@ export function Nav({ links }: NavProps) {
       {links.map((link, index) => (
         <Link
           key={index}
-          href="#"
+          href={link.href}
           className={cn(
             buttonVariants({ variant: link.variant, size: "sm" }),
             link.variant === "default" &&
