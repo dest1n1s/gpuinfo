@@ -24,10 +24,10 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
               href: "/dashboard",
             },
             {
-                title: "Storage",
-                href: "/storage",
-                icon: FaChartLine,
-                variant: "default",
+              title: "Storage",
+              href: "/storage",
+              icon: FaChartLine,
+              variant: "default",
             },
           ]}
         />
