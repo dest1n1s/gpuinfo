@@ -1,5 +1,5 @@
-import { currentUsageUrl, historyFileUrl, historyUsageUrl, passwdFilePath } from "@/config/env";
-import { HistoryInfo, StorageInfo } from "@/types/storage";
+import { passwdFilePath } from "@/config/env";
+import { HistoryInfo, StorageInfo, TotalStorage } from "@/types/storage";
 import * as fs from "fs";
 
 function parsePasswdFile(fileContent: string): { [id: string]: string } {
@@ -30,7 +30,7 @@ async function fetchUsernames(): Promise<{ [id: string]: string }> {
   }
 }
 
-async function fetchHistory(url: string = historyFileUrl): Promise<string> {
+async function fetchHistory(url: string): Promise<string> {
   try {
     const response = await fetch(url);
 
@@ -94,7 +94,7 @@ async function fetchHistoryContent(url: string): Promise<string> {
   }
 }
 
-async function fetchFileContent(url: string = currentUsageUrl): Promise<string> {
+async function fetchFileContent(url: string): Promise<string> {
   try {
     const response = await fetch(url);
 
@@ -125,12 +125,28 @@ export const parseUserQuotas = (
     }));
 };
 
-export const listAllUsers = async () => {
-  const fileContent = await fetchFileContent();
+export const listAllUsers = async (url: string) => {
+  const fileContent = await fetchFileContent(url);
   const idToUsername = await fetchUsernames();
   const jsonData = JSON.parse(fileContent);
   const userQuotas = parseUserQuotas(jsonData, idToUsername);
   return userQuotas;
+};
+
+const parseTotalStorage = (jsonData: { [key: string]: any }): TotalStorage => {
+  const data = jsonData["data"];
+  return {
+    restPercentage: data.rest_percentage,
+    restSize: data.rest_size,
+    totalSize: data.total_size,
+    totalHistory: {},
+  };
+};
+
+export const getTotal = async (url: string) => {
+  const fileContent = await fetchFileContent(url);
+  const jsonData = JSON.parse(fileContent);
+  return parseTotalStorage(jsonData);
 };
 
 export const parseHistoryContent = (
@@ -160,34 +176,66 @@ export const parseHistoryContent = (
   return Array.from(userMap.values());
 };
 
-export const fetchDelta = async (HistoryInfo: HistoryInfo, Users: StorageInfo[]) => {
-  var url =
-    historyUsageUrl + "/" + HistoryInfo.fileName.replace("results_", "").replace(".json", "");
+export const fetchDelta = async (
+  usageurl: string,
+  HistoryInfo: HistoryInfo,
+  Users: StorageInfo[],
+  Total: TotalStorage,
+): Promise<[StorageInfo[], TotalStorage]> => {
+  var url = usageurl + "/" + HistoryInfo.fileName.replace("results_", "").replace(".json", "");
   const idToUsername = await fetchUsernames();
   const historyContent = await fetchHistoryContent(url);
   const jsonData = JSON.parse(historyContent);
+
+  let dataContent;
+  let totalContent;
+
+  if ("data" in jsonData && "total" in jsonData) {
+    dataContent = jsonData.data;
+    totalContent = jsonData.total;
+  } else {
+    dataContent = jsonData;
+    totalContent = null;
+  }
+
   const historyUserQuotas = parseHistoryContent(
-    jsonData,
+    dataContent,
     idToUsername,
     Users,
     HistoryInfo.fileName,
   );
-  return historyUserQuotas;
+  if (totalContent) {
+    Total.totalHistory[HistoryInfo.fileName] = parseTotalStorage(totalContent);
+  }
+
+  const totalWithHistory = Total;
+  return [historyUserQuotas, totalWithHistory];
 };
 
-export const fetchAllHistory = async (Users: StorageInfo[]) => {
-  const history = await fetchHistory();
+export const fetchAllHistory = async (
+  fileurl: string,
+  usageurl: string,
+  Users: StorageInfo[],
+  Total: TotalStorage,
+): Promise<[StorageInfo[], TotalStorage]> => {
+  const history = await fetchHistory(fileurl);
   const jsonData = JSON.parse(history);
   const allHistory = parseHistory(jsonData);
   let usersWithHistory = Users;
+  let totalWithHistory = Total;
   for (const historyInfo of allHistory) {
-    usersWithHistory = await fetchDelta(historyInfo, Users);
+    [usersWithHistory, totalWithHistory] = await fetchDelta(
+      usageurl,
+      historyInfo,
+      usersWithHistory,
+      totalWithHistory,
+    );
   }
-  return usersWithHistory;
+  return [usersWithHistory, totalWithHistory];
 };
 
-export const fetchAvailableDates = async () => {
-  const history = await fetchHistory();
+export const fetchAvailableDates = async (url: string) => {
+  const history = await fetchHistory(url);
   const jsonData = JSON.parse(history);
   return parseHistory(jsonData);
 };

@@ -8,8 +8,13 @@ export type UserCardProps = {
 
 export const UserCard = ({ storageInfo, selectedFile }: UserCardProps) => {
   const storageHistory = storageInfo.storageHistory[selectedFile];
-  console.log(storageInfo.storageHistory);
-  const storageChange = storageHistory ? storageInfo.storage - storageHistory : 0;
+  const storageChange =
+    storageHistory !== undefined && storageHistory !== null
+      ? parseFloat(((storageInfo.storage - storageHistory) / 1024 / 1024).toFixed(2))
+      : 0;
+  const fileChange = storageInfo.fileCountHistory[selectedFile]
+    ? storageInfo.fileCount - storageInfo.fileCountHistory[selectedFile]
+    : 0;
 
   return (
     <Card className="w-full lg:w-[400px]">
@@ -21,45 +26,29 @@ export const UserCard = ({ storageInfo, selectedFile }: UserCardProps) => {
           <div className="grid grid-cols-2 gap-2">
             <div>Storage Usage:</div>
             <div className="text-right">
-              <strong>
-                {(storageInfo.storage / 1024 / 1024).toFixed(2)} GB
-                {selectedFile && storageChange !== 0 && (
-                  <div className="text-right">
-                    <strong style={{ color: storageChange >= 0 ? "red" : "green" }}>
-                      {storageChange >= 0 ? "+" : "-"}
-                      {(Math.abs(storageChange) / 1024 / 1024).toFixed(2)} GB
-                    </strong>
+              <strong>{(storageInfo.storage / 1024 / 1024).toFixed(2)} GB</strong>
+              {selectedFile && storageChange !== 0 && (
+                <div className="text-right">
+                  <div style={{ color: storageChange >= 0 ? "red" : "green" }}>
+                    {storageChange >= 0 ? "+" : "-"}
+                    {Math.abs(storageChange).toFixed(2)} GB
                   </div>
-                )}
-                {selectedFile && storageChange === 0 && (
-                  <div className="text-right">
-                    <strong style={{ color: "black" }}>No change</strong>
-                  </div>
-                )}
-              </strong>
+                </div>
+              )}
+              {selectedFile && storageChange === 0 && <div className="text-right">No change</div>}
             </div>
             <div>File Count:</div>
             <div className="text-right">
-              <strong>
-                {storageInfo.fileCount}
-                {selectedFile && storageInfo.fileCountHistory[selectedFile] && (
-                  <div className="text-right">
-                    <strong
-                      style={{
-                        color:
-                          storageInfo.fileCount - storageInfo.fileCountHistory[selectedFile] >= 0
-                            ? "red"
-                            : "green",
-                      }}
-                    >
-                      {storageInfo.fileCount - storageInfo.fileCountHistory[selectedFile] >= 0
-                        ? "+"
-                        : "-"}
-                      {Math.abs(storageInfo.fileCount - storageInfo.fileCountHistory[selectedFile])}
-                    </strong>
+              <strong>{storageInfo.fileCount}</strong>
+              {selectedFile && fileChange !== 0 && (
+                <div className="text-right">
+                  <div style={{ color: fileChange >= 0 ? "red" : "green" }}>
+                    {fileChange >= 0 ? "+" : "-"}
+                    {Math.abs(fileChange)}
                   </div>
-                )}
-              </strong>
+                </div>
+              )}
+              {selectedFile && fileChange === 0 && <div className="text-right">No change</div>}
             </div>
           </div>
         </div>

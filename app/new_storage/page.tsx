@@ -1,4 +1,9 @@
-import { currentUsageUrl, historyFileUrl, historyUsageUrl, totalUrl } from "@/config/env";
+import {
+  currentUsageUrl_new,
+  historyFileUrl_new,
+  historyUsageUrl_new,
+  totalUrl_new,
+} from "@/config/env";
 import {
   compareHistoryInfo,
   fetchAllHistory,
@@ -6,17 +11,17 @@ import {
   getTotal,
   listAllUsers,
 } from "@/lib/storage";
-import StoragePage from "./components/grid";
+import StoragePage from "../storage/components/grid";
 
 export const dynamic = "force-dynamic";
 
 export default async function Storage() {
-  const users = await listAllUsers(currentUsageUrl);
-  const dates = await fetchAvailableDates(historyFileUrl);
-  const total = await getTotal(totalUrl);
+  const users = await listAllUsers(currentUsageUrl_new);
+  const dates = await fetchAvailableDates(historyFileUrl_new);
+  const total = await getTotal(totalUrl_new);
   const [usersWithHistory, totalWithHistory] = await fetchAllHistory(
-    historyFileUrl,
-    historyUsageUrl,
+    historyFileUrl_new,
+    historyUsageUrl_new,
     users,
     total,
   );
@@ -28,7 +33,7 @@ export default async function Storage() {
       users={usersWithHistory}
       dates={dates}
       total={totalWithHistory}
-      title="Old Storage"
+      title="New Storage"
     />
   );
 }
