@@ -11,4 +11,4 @@ export const passwdFilePath = process.env.PASSWD_FILE || "/etc/passwd";
 export const totalUrl_new = process.env.TOTAL_URL_NEW || "http://10.176.52.11:5000/total";
 export const currentUsageUrl_new = process.env.CURRENT_USAGE_URL_NEW || "http://10.176.52.11:5000/show";
 export const historyFileUrl_new = process.env.HISTORY_FILE_URL_NEW || "http://10.176.52.11:5000/query";
-export const historyUsageUrl_new = process.env.HISTORY_USAGE_URL_NEW || "http://10.176.52.11:5000/show";
+export const historyUsageUrl_new = process.env.HISTORY_USAGE_URL_NEW || "http://10.176.52.11:5000/history";
