@@ -23,3 +23,8 @@ export type NodeInfo = {
   ip: string;
   gpus: GPUInfoWithUser[];
 };
+
+export type PartitionInfo<Node> = {
+  partition: string;
+  nodes: Node[];
+};

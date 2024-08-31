@@ -17,7 +17,7 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
         <Nav
           links={[
             {
-              title: "Dashboard",
+              title: "GPUs",
               label: "",
               icon: FaChartLine,
               variant: "default",
