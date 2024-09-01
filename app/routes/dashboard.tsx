@@ -1,19 +1,23 @@
+import { NodeCard } from "@/components/app/node-card";
 import { listPartitionsDetailed } from "@/lib/gpu";
-import Link from "next/link";
-import { Fragment } from "react";
-import { NodeCard } from "./ components/node-card";
+import { PartitionInfoSchema } from "@/types/gpu";
+import { Link, useLoaderData } from "@remix-run/react";
+import { Fragment } from "react/jsx-runtime";
 
-export const dynamic = "force-dynamic";
+export async function loader() {
+  return { partitions: await listPartitionsDetailed() };
+}
 
-export default async function DashboardPage() {
-  const partitions = await listPartitionsDetailed();
+export default function Page() {
+  const loaderData = useLoaderData<typeof loader>();
+  const partitions = PartitionInfoSchema.array().parse(loaderData.partitions);
 
   return (
     <div className="flex min-h-screen flex-col w-full pt-10 pb-20 gap-10">
       <h1 className="text-3xl font-bold">Monitor GPU Status</h1>
       {partitions.map(partition => (
         <Fragment key={partition.partition}>
-          <Link href={`#${partition.partition}`}>
+          <Link to={`#${partition.partition}`}>
             <h2 id={partition.partition} className="text-2xl font-bold relative group">
               <a
                 className="absolute -left-6 text-neutral-300 opacity-0 group-hover:opacity-100 transition-opacity"

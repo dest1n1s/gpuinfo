@@ -1,7 +1,5 @@
-"use client";
-
 import { cn } from "@/lib/utils";
-import Link from "next/link";
+import { Link } from "@remix-run/react";
 import { IconType } from "react-icons";
 import { buttonVariants } from "./ui/button";
 
@@ -21,7 +19,7 @@ export function Nav({ links }: NavProps) {
       {links.map((link, index) => (
         <Link
           key={index}
-          href={link.href}
+          to={link.href}
           className={cn(
             buttonVariants({ variant: link.variant, size: "sm" }),
             link.variant === "default" &&

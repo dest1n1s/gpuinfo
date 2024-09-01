@@ -1,6 +1,5 @@
-"use client";
-
 import { TooltipProvider } from "@radix-ui/react-tooltip";
+import React from "react";
 import { FaChartLine } from "react-icons/fa6";
 import { Nav } from "./nav";
 import { Separator } from "./ui/separator";
@@ -31,7 +30,7 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
             },
             {
               title: "New Storage",
-              href: "/new_storage",
+              href: "/new-storage",
               icon: FaChartLine,
               variant: "default",
             },

@@ -1,9 +1,7 @@
-"use client";
-
 import { HistoryInfo, StorageInfo, TotalStorage } from "@/types/storage";
 import { format } from "date-fns";
 import { useState } from "react";
-import TotalBar from "./total";
+import TotalBar from "./total-storage-bar";
 import { UserCard } from "./user-card";
 
 type StoragePageProps = {
@@ -12,8 +10,6 @@ type StoragePageProps = {
   total: TotalStorage;
   title: string;
 };
-
-export const dynamic = "force-dynamic";
 
 export default function StoragePage({ users, dates, total, title }: StoragePageProps) {
   const [sortCriteria, setSortCriteria] = useState("usage");

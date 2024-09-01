@@ -20,7 +20,7 @@ FROM imbios/bun-node:latest as runner
 WORKDIR /app
 COPY --from=builder /app/package.json /app/bun.lockb /app/tsconfig.json ./
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/build ./build
 RUN bun install --production
 
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
