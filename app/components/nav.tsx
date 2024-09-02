@@ -1,7 +1,8 @@
 import { cn } from "@/lib/utils";
-import { Link } from "@remix-run/react";
+import { Link, useNavigation } from "@remix-run/react";
 import { IconType } from "react-icons";
 import { buttonVariants } from "./ui/button";
+import { Spinner } from "./ui/spinner";
 
 interface NavProps {
   links: {
@@ -14,6 +15,8 @@ interface NavProps {
 }
 
 export function Nav({ links }: NavProps) {
+  const navigation = useNavigation();
+
   return (
     <nav className="flex gap-2 px-10">
       {links.map((link, index) => (
@@ -38,6 +41,9 @@ export function Nav({ links }: NavProps) {
             >
               {link.label}
             </span>
+          )}
+          {navigation.location?.pathname === link.href && (
+            <Spinner className="ml-2 h-4 w-4 text-background dark:text-white" />
           )}
         </Link>
       ))}

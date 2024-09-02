@@ -1,5 +1,5 @@
 import StoragePage from "@/components/app/storage-page";
-import { currentUsageUrl, historyFileUrl, historyUsageUrl, totalUrl } from "@/config/env";
+import { storageBackendUrl } from "@/config/env";
 import {
   compareHistoryInfo,
   fetchAllHistory,
@@ -11,12 +11,12 @@ import { HistoryInfoSchema, StorageInfoSchema, TotalStorageSchema } from "@/type
 import { useLoaderData } from "@remix-run/react";
 
 export const loader = async () => {
-  const users = await listAllUsers(currentUsageUrl);
-  const dates = await fetchAvailableDates(historyFileUrl);
-  const total = await getTotal(totalUrl);
+  const users = await listAllUsers(`${storageBackendUrl}/show`);
+  const dates = await fetchAvailableDates(`${storageBackendUrl}/query`);
+  const total = await getTotal(`${storageBackendUrl}/total`);
   const [usersWithHistory, totalWithHistory] = await fetchAllHistory(
-    historyFileUrl,
-    historyUsageUrl,
+    `${storageBackendUrl}/query`,
+    `${storageBackendUrl}/history`,
     users,
     total,
   );
