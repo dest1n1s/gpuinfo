@@ -26,13 +26,23 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { formatDistanceShortenLocale } from "@/lib/utils";
 import { GPUInfoWithUser, NodeInfo } from "@/types/gpu";
-import { format } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
+import locale from "date-fns/locale/en-US";
 
 export type GPUAccordionItemProps = {
   gpu: GPUInfoWithUser;
 };
 export const GPUAccordionItem = ({ gpu }: GPUAccordionItemProps) => {
+  const defaultFormatDurationOptions = {
+    format: ["years", "days", "hours", "minutes"],
+    locale: {
+      ...locale,
+      formatDistance: formatDistanceShortenLocale,
+    },
+  };
+
   return (
     <AccordionItem value={`${gpu.index}`}>
       <AccordionTrigger className="flex gap-2">
@@ -40,7 +50,11 @@ export const GPUAccordionItem = ({ gpu }: GPUAccordionItemProps) => {
           <div className="flex justify-between">
             <div className="flex gap-2">
               <div>GPU {gpu.index}</div>
-              {gpu.user && <div className="text-gray-600">({gpu.user})</div>}
+              {gpu.user && gpu.start_time && (
+                <div className="text-gray-600">
+                  ({gpu.user}, {formatDistanceToNow(gpu.start_time, defaultFormatDurationOptions)})
+                </div>
+              )}
             </div>
             <div className="flex">
               {gpu.utilization}%

@@ -19,6 +19,7 @@ export type GPUInfo = {
 
 export type GPUInfoWithUser = GPUInfo & {
   user: string | null;
+  start_time: Date | null;
 };
 
 export type NodeInfo = {
@@ -47,6 +48,7 @@ export const GPUInfoWithUserSchema = z.object({
   utilization: z.number(),
   time: z.coerce.date(),
   user: z.string().nullable(),
+  start_time: z.coerce.date().nullable(),
 });
 
 export const NodeInfoSchema = z.object({

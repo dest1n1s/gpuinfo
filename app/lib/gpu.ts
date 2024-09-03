@@ -25,11 +25,16 @@ export const listPartitionsDetailed = async (): Promise<PartitionInfo<NodeInfo>[
                 return [...acc, gpu];
               }, [])
               .toSorted((a, b) => a.index - b.index)
-              .map(async gpu => ({
-                ...gpu,
-                user:
-                  (await db.collection(node + "-user").findOne({ idx: gpu.index }))?.user ?? null,
-              })),
+              .map(async gpu => {
+                const userInfo = await db
+                  .collection<{ user: string; start_time: Date }>(node + "-user")
+                  .findOne({ idx: gpu.index });
+                return {
+                  ...gpu,
+                  user: userInfo?.user ?? null,
+                  start_time: userInfo?.start_time ?? null,
+                };
+              }),
           );
 
           return { ip: node, gpus };
