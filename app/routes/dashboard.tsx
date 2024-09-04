@@ -1,16 +1,29 @@
 import { NodeCard } from "@/components/app/node-card";
 import { listPartitionsDetailed } from "@/lib/gpu";
 import { PartitionInfoSchema } from "@/types/gpu";
-import { Link, useLoaderData } from "@remix-run/react";
+import { Link, useFetcher, useLoaderData } from "@remix-run/react";
+import { useEffect } from "react";
 import { Fragment } from "react/jsx-runtime";
 
 export async function loader() {
   return { partitions: await listPartitionsDetailed() };
 }
 
+export async function action() {
+  return { partitions: await listPartitionsDetailed() };
+}
+
 export default function Page() {
   const loaderData = useLoaderData<typeof loader>();
-  const partitions = PartitionInfoSchema.array().parse(loaderData.partitions);
+  const fetcher = useFetcher<typeof action>();
+  const partitions = PartitionInfoSchema.array().parse((fetcher.data || loaderData).partitions);
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      fetcher.submit(new FormData(), { method: "post" });
+    }, 10000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="flex min-h-screen flex-col w-full pt-10 pb-20 gap-10">
