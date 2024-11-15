@@ -1,3 +1,4 @@
+import { logger } from "@/logging.server";
 import { GPUInfo, NodeInfo, PartitionInfo } from "@/types/gpu";
 import { db, mongoConnectPromise } from "./database/database";
 
@@ -7,8 +8,9 @@ export const listPartitions = async (): Promise<PartitionInfo<string>[]> => {
 };
 
 export const listPartitionsDetailed = async (): Promise<PartitionInfo<NodeInfo>[]> => {
+  logger.info("[listPartitionsDetailed] MongoDB request started");
   await mongoConnectPromise;
-  return Promise.all(
+  const response = await Promise.all(
     (await listPartitions()).map(async partition => {
       const nodes = await Promise.all(
         partition.nodes.map(async node => {
@@ -44,4 +46,6 @@ export const listPartitionsDetailed = async (): Promise<PartitionInfo<NodeInfo>[
       return { ...partition, nodes };
     }),
   );
+  logger.info("[listPartitionsDetailed] MongoDB request finished");
+  return response;
 };
