@@ -3,7 +3,7 @@ import { NodeCard } from "@/components/app/node-card";
 import { listPartitionsDetailed } from "@/lib/gpu";
 import { PartitionInfoSchema } from "@/types/gpu";
 import { Link, useFetcher, useLoaderData } from "@remix-run/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Fragment } from "react/jsx-runtime";
 
 export async function loader() {
@@ -19,12 +19,13 @@ export default function Page() {
   const fetcher = useFetcher<typeof action>();
   const partitions = PartitionInfoSchema.array().parse((fetcher.data || loaderData).partitions);
 
-  // useEffect(() => {
-  //   const interval = setInterval(async () => {
-  //     fetcher.submit(new FormData(), { method: "post" });
-  //   }, 10000);
-  //   return () => clearInterval(interval);
-  // }, []);
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      fetcher.submit(new FormData(), { method: "post" });
+    }, 10000);
+    return () => clearInterval(interval);
+  }, []);
+  
   const [selectedPartitions, setSelectedPartitions] = useState<string[]>([]);
   return (
     <div className="flex min-h-screen flex-col w-full pt-10 pb-20 gap-10">

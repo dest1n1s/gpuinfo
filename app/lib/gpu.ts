@@ -43,6 +43,13 @@ export const listPartitionsDetailed = async (): Promise<PartitionInfo<NodeInfo>[
     ])
     .toArray();
 
+  // Sort gpus in each node by index
+  response.forEach(partition => {
+    partition.nodes.forEach(node => {
+      node.gpus.sort((a, b) => a.index - b.index);
+    });
+  });
+
   cache.set(cacheKey, response);
   logger.info("[listPartitionsDetailed] MongoDB request finished");
   return response;
